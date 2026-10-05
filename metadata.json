@@ -1,0 +1,6 @@
+{
+  "name": "THE DAILY PULSE",
+  "description": "Stories, Ideas & Insights for Every Interest. A modern multi-topic digital magazine covering Sports, Technology, Entertainment, Travel, Business, Health, Education, Automobiles, Food & Lifestyle, and AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
