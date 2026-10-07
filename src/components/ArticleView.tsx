@@ -38,6 +38,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
   const [copied, setCopied] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [imgError, setImgError] = useState(false);
 
   // Comments state
   const [comments, setComments] = useState<Comment[]>([
@@ -247,11 +248,23 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
         {/* Large Featured Image */}
         <div className="my-8 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            className="w-full aspect-[16/9] object-cover"
-          />
+          {imgError ? (
+            <div className="w-full aspect-[16/9] flex flex-col items-center justify-center bg-gradient-to-br from-stone-800 to-stone-950 text-stone-200 p-8 text-center">
+              <span className="text-xs uppercase tracking-widest font-semibold text-amber-400 mb-2">
+                {article.categoryName}
+              </span>
+              <h3 className="font-editorial text-2xl sm:text-3xl font-bold max-w-xl text-stone-100">
+                {article.title}
+              </h3>
+            </div>
+          ) : (
+            <img
+              src={article.imageUrl}
+              alt={article.title}
+              onError={() => setImgError(true)}
+              className="w-full aspect-[16/9] object-cover"
+            />
+          )}
           {article.imageCaption && (
             <div className="p-3 text-xs text-stone-500 dark:text-stone-400 italic bg-stone-100/60 dark:bg-stone-900/60 border-t border-stone-200/60 dark:border-stone-800/60">
               {article.imageCaption}
@@ -263,7 +276,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         {article.keyTakeaways && article.keyTakeaways.length > 0 && (
           <div className="my-8 p-6 bg-stone-100/70 dark:bg-stone-900/60 border-l-4 border-amber-700 dark:border-amber-500 rounded-r-lg">
             <div className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-3">
-              Essential Takeaways
+              Essential Takeaways &amp; Executive Summary
             </div>
             <ul className="space-y-2 text-sm text-stone-700 dark:text-stone-300">
               {article.keyTakeaways.map((item, idx) => (
@@ -273,6 +286,25 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* Fast Facts Grid if available */}
+        {article.fastFacts && article.fastFacts.length > 0 && (
+          <div className="my-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {article.fastFacts.map((fact, idx) => (
+              <div
+                key={idx}
+                className="p-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-center"
+              >
+                <div className="text-lg sm:text-xl font-bold font-mono text-amber-800 dark:text-amber-400">
+                  {fact.value}
+                </div>
+                <div className="text-[11px] uppercase tracking-wider text-stone-500 dark:text-stone-400 mt-1 font-medium">
+                  {fact.label}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -320,6 +352,42 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </section>
           ))}
         </div>
+
+        {/* Deep Dive Box if present */}
+        {article.deepDiveBox && (
+          <div className="my-10 p-6 sm:p-8 bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-xl">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-400 mb-2">
+              <span>Deep-Dive Analysis</span>
+            </div>
+            <h3 className="font-editorial text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 mb-3">
+              {article.deepDiveBox.title}
+            </h3>
+            <p className="text-stone-700 dark:text-stone-300 text-sm sm:text-base leading-relaxed whitespace-pre-line">
+              {article.deepDiveBox.content}
+            </p>
+          </div>
+        )}
+
+        {/* Q&A / Critical Questions if present */}
+        {article.faq && article.faq.length > 0 && (
+          <div className="my-10 p-6 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl">
+            <div className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-3">
+              Key Questions &amp; Reader Insights
+            </div>
+            <div className="divide-y divide-stone-200 dark:divide-stone-800">
+              {article.faq.map((item, idx) => (
+                <div key={idx} className="py-4 first:pt-0 last:pb-0">
+                  <h4 className="font-editorial font-bold text-base sm:text-lg text-stone-900 dark:text-stone-100 mb-1.5">
+                    {item.question}
+                  </h4>
+                  <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed">
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Tags */}
         <div className="mt-12 pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-wrap items-center gap-2 text-xs">

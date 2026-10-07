@@ -12,6 +12,8 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   articles,
   onSelectArticle,
 }) => {
+  const [topImgError, setTopImgError] = React.useState(false);
+
   if (!articles || articles.length === 0) return null;
 
   const topTrending = articles[0];
@@ -45,12 +47,24 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
               className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow cursor-pointer"
             >
               <div className="relative aspect-[16/11] overflow-hidden bg-stone-100 dark:bg-stone-800">
-                <img
-                  src={topTrending.imageUrl}
-                  alt={topTrending.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
-                  loading="lazy"
-                />
+                {topImgError ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-800 to-stone-950 text-stone-200 p-6 text-center">
+                    <span className="text-[10px] tracking-widest uppercase font-semibold text-amber-400">
+                      {topTrending.categoryName}
+                    </span>
+                    <p className="text-sm font-editorial mt-1 line-clamp-2 text-stone-100">
+                      {topTrending.title}
+                    </p>
+                  </div>
+                ) : (
+                  <img
+                    src={topTrending.imageUrl}
+                    alt={topTrending.title}
+                    onError={() => setTopImgError(true)}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+                    loading="lazy"
+                  />
+                )}
                 <div className="absolute top-3 left-3 bg-amber-600 text-white text-xs font-bold px-2 py-0.5 rounded font-mono">
                   #1 TRENDING
                 </div>

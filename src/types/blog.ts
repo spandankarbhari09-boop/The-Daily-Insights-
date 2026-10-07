@@ -53,6 +53,9 @@ export interface Article {
   popularRank?: number;
   tags: string[];
   keyTakeaways: string[];
+  fastFacts?: { label: string; value: string }[];
+  deepDiveBox?: { title: string; content: string };
+  faq?: { question: string; answer: string }[];
   sections: ArticleSection[];
 }
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Clock, ArrowRight, Bookmark } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, ArrowRight, Bookmark, Newspaper } from 'lucide-react';
 import { Article } from '../types/blog';
 import { useBookmarks } from '../context/BookmarkContext';
 
@@ -18,10 +18,37 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 }) => {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(article.id);
+  const [imgError, setImgError] = useState(false);
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleBookmark(article.id);
+  };
+
+  const renderThumbnail = () => {
+    if (imgError) {
+      return (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-800 to-stone-950 text-stone-300 p-6 text-center">
+          <Newspaper className="w-8 h-8 text-amber-500 mb-2 opacity-80" />
+          <span className="text-[10px] tracking-widest uppercase font-semibold text-amber-400">
+            {article.categoryName}
+          </span>
+          <p className="text-xs font-editorial mt-1 line-clamp-2 text-stone-200">
+            {article.title}
+          </p>
+        </div>
+      );
+    }
+    return (
+      <img
+        src={article.imageUrl}
+        alt={article.title}
+        onError={() => setImgError(true)}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+        loading="lazy"
+        referrerPolicy="no-referrer"
+      />
+    );
   };
 
   if (layout === 'horizontal') {
@@ -31,13 +58,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         className="group relative bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg overflow-hidden flex flex-col md:flex-row hover:border-stone-300 dark:hover:border-stone-700 hover:shadow-md transition-all duration-200 cursor-pointer"
       >
         <div className="md:w-5/12 relative aspect-[16/10] md:aspect-auto overflow-hidden bg-stone-100 dark:bg-stone-800">
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
+          {renderThumbnail()}
           {badgeRank !== undefined && (
             <div className="absolute top-3 left-3 w-7 h-7 bg-stone-900/90 text-white text-xs font-bold rounded flex items-center justify-center font-mono">
               0{badgeRank}
@@ -121,13 +142,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg overflow-hidden flex flex-col hover:border-stone-300 dark:hover:border-stone-700 hover:shadow-md transition-all duration-200 cursor-pointer"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-stone-100 dark:bg-stone-800">
-        <img
-          src={article.imageUrl}
-          alt={article.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
-          loading="lazy"
-          referrerPolicy="no-referrer"
-        />
+        {renderThumbnail()}
         {badgeRank !== undefined && (
           <div className="absolute top-3 left-3 w-7 h-7 bg-stone-900/90 text-white text-xs font-bold rounded flex items-center justify-center font-mono">
             0{badgeRank}
