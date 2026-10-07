@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Article, CategoryId, Comment } from '../types/blog';
 import { getRelatedArticles } from '../data/articles';
+import { CATEGORY_FALLBACK_IMAGES } from '../data/categories';
 import { ArticleCard } from './ArticleCard';
 import { useBookmarks } from '../context/BookmarkContext';
 
@@ -38,7 +39,19 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
   const [copied, setCopied] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [imgError, setImgError] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  const fallbackUrl = CATEGORY_FALLBACK_IMAGES[article.category];
+  const activeImageSrc = triedFallback ? fallbackUrl : (article.imageUrl || fallbackUrl);
+
+  const handleImageError = () => {
+    if (!triedFallback && fallbackUrl && article.imageUrl !== fallbackUrl) {
+      setTriedFallback(true);
+    } else {
+      setImgFailed(true);
+    }
+  };
 
   // Comments state
   const [comments, setComments] = useState<Comment[]>([
@@ -248,7 +261,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
         {/* Large Featured Image */}
         <div className="my-8 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-          {imgError ? (
+          {imgFailed ? (
             <div className="w-full aspect-[16/9] flex flex-col items-center justify-center bg-gradient-to-br from-stone-800 to-stone-950 text-stone-200 p-8 text-center">
               <span className="text-xs uppercase tracking-widest font-semibold text-amber-400 mb-2">
                 {article.categoryName}
@@ -259,9 +272,9 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </div>
           ) : (
             <img
-              src={article.imageUrl}
+              src={activeImageSrc}
               alt={article.title}
-              onError={() => setImgError(true)}
+              onError={handleImageError}
               className="w-full aspect-[16/9] object-cover"
             />
           )}

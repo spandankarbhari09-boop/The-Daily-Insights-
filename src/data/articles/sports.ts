@@ -95,8 +95,8 @@ export const SPORTS_ARTICLES: Article[] = [
     category: 'sports',
     categoryName: 'Sports',
     publishedAt: 'October 1, 2026',
-    readTime: '7 min read',
-    imageUrl: cricketImg,
+    readTime: '8 min read',
+    imageUrl: cricketImg || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80',
     imageCaption: 'Modern batting mechanics increasingly resemble athletic improvisation under analytical pressure.',
     author: {
       name: 'Arjun Sen',
@@ -272,27 +272,57 @@ export const SPORTS_ARTICLES: Article[] = [
       { label: 'Pass Completion', value: '89.2%' },
       { label: 'Pressing PPDA', value: '7.8 Passes' },
     ],
-    tags: ['Football', 'Tactics', 'Coaching', 'Game Theory', 'Midfield Play'],
+    faq: [
+      {
+        question: 'How do football analytics models quantify the impact of off-the-ball runs?',
+        answer: 'Computer vision tracking computes "threat generated" and "pitch control" metrics, measuring how a player’s decoy sprint pulls opposing center-backs out of position and opens passing lanes for teammates, even if they never touch the ball.',
+      },
+      {
+        question: 'Why do modern coaches place so much emphasis on high pressing?',
+        answer: 'Winning the ball within thirty meters of the opponent’s goal creates instantaneous scoring opportunities against a disoriented, unbalanced defense before they can establish an organized low block.',
+      },
+      {
+        question: 'What is a "half-space" in modern positional play?',
+        answer: 'The half-space is the vertical corridor situated between the central midfield channel and the touchline flank. It is the most dangerous zone on the pitch because it provides optimal diagonal passing angles into the penalty box.',
+      },
+    ],
+    tags: ['Football', 'Tactics', 'Coaching', 'Game Theory', 'Midfield Play', 'Positional Play'],
     sections: [
       {
-        heading: 'The Inverted Fullback Revolution',
+        heading: 'The Inverted Fullback Revolution and Half-Space Overloads',
         paragraphs: [
           'Fullbacks were historically tasked with two simple duties: mark the opposing winger and occasionally overlap to whip in crosses from the touchline. Today, elite managers invert their wide defenders directly into central midfield to dictate possession and suffocate opponent counter-attacks.',
           'This tactical mutation creates numerical superiorities that force opposing defensive blocks into impossible rotational dilemmas. If an opponent winger tracks the fullback inside, it opens wide corridors for attacking wingers; if they hold their wide position, the central midfield gets overwhelmed.',
+          'By occupying the half-spaces—the fertile channels between the center of the pitch and the flanks—inverted fullbacks provide diagonal passing angles that slice through compact defensive lines.',
         ],
+        quote: 'Formations are just phone numbers. What matters is the dynamic spatial geometry and territorial control when the ball begins to roll.',
       },
       {
-        heading: 'The Sweeper Keeper as the Eleventh Playmaker',
+        heading: 'The Sweeper Keeper as the Eleventh Field Playmaker',
         paragraphs: [
-          'A goalkeeper unable to deliver accurate 40-yard diagonal passes against an aggressive high press is now a severe liability. Teams build their entire progressive sequences from the six-yard box outward.',
+          'A goalkeeper unable to deliver accurate 40-yard diagonal passes against an aggressive high press is now a severe liability in elite football. Teams build their entire progressive sequences from the six-yard box outward.',
           'By baiting opponents to press high up the pitch, goalkeepers create expansive space behind the opposition midfield, turning defensive goal-kicks into calculated attacking breakaways.',
+          'Beyond passing range, the modern keeper acts as a defensive sweeper, positioning themselves thirty yards off their line to aggressively extinguish long through-balls before opponent strikers can reach them.',
+        ],
+        keyPoints: [
+          'Goalkeepers practice two-touch distribution drills alongside central midfielders.',
+          'High starting positions shrink the playable pitch, compressing opponent counters.',
+          'Short goal-kick build-ups draw out defensive blocks to expose space behind.',
         ],
       },
       {
-        heading: 'Rest-Defense and the Prevention of Chaos',
+        heading: 'Rest-Defense and the Prevention of Transition Chaos',
         paragraphs: [
           'Championship teams do not worry about defending only when they lose the ball; they defend while attacking. A structured rest-defense formation—often featuring three center-backs and two holding midfielders positioned behind the attacking five—locks down the opponent’s primary transition outlets.',
           'When possession is inevitably surrendered, the attacking team swarms the ball carrier within three seconds, suffocating dangerous breakaways before they cross the halfway line.',
+          'This counter-pressing discipline allows the team to sustain relentless waves of attacking pressure without exposing their backline to vulnerable foot races.',
+        ],
+      },
+      {
+        heading: 'Zonal Pressing Triggers and Collective Synchrony',
+        paragraphs: [
+          'Pressing is no longer an individual sprint of passion; it is an orchestrated team movement triggered by specific cues: an opponent taking a heavy touch, a bouncing ball, or a defender facing backward toward their own goal.',
+          'When the pressing trigger fires, five players collapse simultaneously like a closing net, sealing off forward passing lanes and forcing immediate turnovers in hazardous territory.',
         ],
       },
     ],
@@ -301,13 +331,13 @@ export const SPORTS_ARTICLES: Article[] = [
     id: 'sports-5',
     slug: 'why-young-athletes-are-redefining-global-tennis-and-basketball',
     title: 'Why Young Athletes Are Redefining Global Tennis and Basketball',
-    subtitle: 'Unprecedented physical wingspans, court-mapping vision, and fearless temperament are toppling established champions.',
+    subtitle: 'Unprecedented physical wingspans, court-mapping vision, and fearless temperament are toppling established champions across Grand Slams and the NBA.',
     category: 'sports',
     categoryName: 'Sports',
     publishedAt: 'September 24, 2026',
-    readTime: '7 min read',
+    readTime: '10 min read',
     imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80',
-    imageCaption: 'The modern basketball athlete blends seven-foot height with guard-like shooting fluidity.',
+    imageCaption: 'The modern basketball athlete blends seven-foot height with guard-like shooting fluidity and perimeter perimeter footwork.',
     author: {
       name: 'Marcus Bell',
       role: 'North American Sports Columnist',
@@ -316,10 +346,11 @@ export const SPORTS_ARTICLES: Article[] = [
     },
     excerpt: 'From nineteen-year-old Grand Slam champions to seven-foot point forwards, the physical and skill archetypes across global basketball and tennis are mutating into breathtaking new athletic dimensions.',
     keyTakeaways: [
-      'Positionless basketball requires all five players on the floor to shoot, handle, and defend multiple positions.',
-      'Young tennis stars produce heavy topspin groundstrokes exceeding 105 mph from defensive baseline slides.',
+      'Positionless basketball requires all five players on the floor to shoot from deep, handle the ball in transition, and defend multiple positions.',
+      'Young tennis stars produce heavy topspin groundstrokes exceeding 105 mph from sliding defensive baseline positions.',
       'Early cross-training in gymnastics, yoga, and mobility preserves joint integrity in exceptionally tall young athletes.',
       'Mental performance coaching desensitizes young athletes to high-pressure tiebreaks and fourth-quarter minutes.',
+      'Spatial tracking cameras analyze shot quality and defensive closeout distances to optimize shot selection.',
     ],
     fastFacts: [
       { label: 'Avg Forehand Speed', value: '131 km/h' },
@@ -327,25 +358,62 @@ export const SPORTS_ARTICLES: Article[] = [
       { label: '3-Point Attempt Rate', value: '44% of Shots' },
       { label: 'Wingspan Advantage', value: '+7.5 Inches' },
     ],
-    tags: ['Tennis', 'Basketball', 'NBA', 'Grand Slam', 'Athletic Development'],
+    deepDiveBox: {
+      title: 'The Kinematic Chain: Generating Rotational Torque',
+      content: 'Using high-speed 500fps motion-capture cameras, sports biomechanists revealed that the newest generation of tennis ball-strikers generates sixty percent of racket-head speed through hip and thoracic spinal rotation rather than shoulder or arm musculature. By planting their lead foot and uncoiling their posterior kinetic chain, players strike the ball with staggering velocity while placing significantly less torque on their elbow and rotator cuff ligaments.',
+    },
+    faq: [
+      {
+        question: 'Why are seven-foot basketball players shooting three-pointers instead of playing inside the post?',
+        answer: 'Mathematical efficiency: three points generated at a 37% shooting percentage yields 1.11 points per possession, which is far more efficient than heavily contested two-point post-up hooks. Spacing the floor also opens driving lanes for teammates.',
+      },
+      {
+        question: 'How do young tennis players slide so easily on hard courts without injuring ankles?',
+        answer: 'Modern shoe outsoles feature specialized rubber herringbone compounds that provide controlled micro-slips on acrylic hard courts, and players train ankle mobility and hip abduction from childhood to dissipate lateral deceleration forces safely.',
+      },
+      {
+        question: 'Why are teenage athletes psychologically readier for elite pro stages today?',
+        answer: 'From age twelve, elite junior academies integrate cognitive reaction monitors, biofeedback breathing training, and media simulation into daily schedules, reducing cortisol spikes during high-stakes championship finals.',
+      },
+    ],
+    tags: ['Tennis', 'Basketball', 'NBA', 'Grand Slam', 'Athletic Development', 'Biomechanics'],
     sections: [
       {
         heading: 'The Era of the Positionless Unicorn',
         paragraphs: [
-          'Traditional basketball labels like center, power forward, and shooting guard have dissolved. The new gold standard is the athletic unicorn: seven-foot athletes who pull up from thirty feet, handle in transition, and protect the rim simultaneously.',
-          'In tennis, the dominance of defensive baseline grinding has been challenged by fearless young ball-strikers who truncate rally lengths with hyper-aggressive return angles and drop-shot disguises that leave opponents stranded.',
+          'Traditional basketball labels like center, power forward, and shooting guard have dissolved. The new gold standard is the athletic unicorn: seven-foot athletes who pull up from thirty-five feet, handle the ball in transition like point guards, and protect the rim with eight-foot wingspans.',
+          'In tennis, the dominance of passive defensive baseline grinding has been shattered by fearless young ball-strikers who truncate rally lengths with hyper-aggressive return angles, drop-shot disguises, and explosive net charges.',
+          'These athletes refuse to be categorized by traditional physical boundaries; they merge towering physical size with the delicate touch and spatial creativity of perimeter artists.',
         ],
+        quote: 'Do not put limits on an athlete because of their height. If they can dribble, pass, and shoot, let them play free.',
       },
       {
-        heading: 'Biomechanics and Kinematic Chaining',
+        heading: 'Biomechanics and the Rotational Kinetic Chain',
         paragraphs: [
-          'High-speed motion capture reveals that contemporary young players generate explosive power through ground-reaction forces rather than isolated arm swings. By coiling through their hips and core, they deliver ball speeds once deemed physically impossible, with minimal joint stress.',
+          'High-speed kinematic tracking reveals that contemporary young players generate explosive power through ground-reaction forces rather than isolated arm swings. By coiling through their hips and core, they deliver ball speeds once deemed physically impossible, with minimal joint stress.',
+          'In tennis, the modern open-stance forehand allows players to slide into corners, absorb 100-mph pace, and redirect the ball down the line while fully stretched, turning defensive desperation into instantaneous winners.',
+          'Conditioning programs now emphasize rotational core power, plyometric deceleration control, and ankle mobility rather than brute static barbell weightlifting.',
+        ],
+        keyPoints: [
+          'Rotational medicine ball throws build elastic core power.',
+          'Eccentric hamstring training prevents sprint deceleration tears.',
+          'Proprioceptive balance boards train rapid ankle stability.',
         ],
       },
       {
         heading: 'Fearless Temperament on Big Stages',
         paragraphs: [
           'Perhaps the most striking change is mental: where young players once felt intimidated facing generational legends on Centre Court or in playoff arenas, today’s youngsters compete with calm audacity, treating the sport’s biggest stages as their natural proving ground.',
+          'Growing up in an era where global match footage, analytics, and tactical breakdowns are accessible 24/7, young prodigies demystify greatness early. They study their idols’ weaknesses for years before stepping onto the court against them.',
+          'When the decisive tiebreak arrives, they do not push the ball safely into the center of the court; they go for the lines with fearless conviction.',
+        ],
+      },
+      {
+        heading: 'The Global Pipeline and Diverse Sporting Heritage',
+        paragraphs: [
+          'The geographic footprint of tennis and basketball has exploded: superstars emerge from Serbia, Cameroon, Greece, Spain, Canada, Japan, and France.',
+          'This global cross-pollination enriches both sports with diverse training philosophies, tactical sensibilities, and athletic creativity.',
+          'As sports science and global talent scouting continue to democratize access, the boundary of human athletic capability will continue to be pushed into extraordinary new realms.',
         ],
       },
     ],

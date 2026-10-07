@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Clock, ArrowRight, Bookmark, Newspaper } from 'lucide-react';
 import { Article } from '../types/blog';
 import { useBookmarks } from '../context/BookmarkContext';
+import { CATEGORY_FALLBACK_IMAGES } from '../data/categories';
 
 interface ArticleCardProps {
   article: Article;
@@ -18,15 +19,27 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 }) => {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(article.id);
-  const [imgError, setImgError] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  const fallbackUrl = CATEGORY_FALLBACK_IMAGES[article.category];
+  const activeImageSrc = triedFallback ? fallbackUrl : (article.imageUrl || fallbackUrl);
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleBookmark(article.id);
   };
 
+  const handleImageError = () => {
+    if (!triedFallback && fallbackUrl && article.imageUrl !== fallbackUrl) {
+      setTriedFallback(true);
+    } else {
+      setImgFailed(true);
+    }
+  };
+
   const renderThumbnail = () => {
-    if (imgError) {
+    if (imgFailed) {
       return (
         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-800 to-stone-950 text-stone-300 p-6 text-center">
           <Newspaper className="w-8 h-8 text-amber-500 mb-2 opacity-80" />
@@ -41,9 +54,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
     return (
       <img
-        src={article.imageUrl}
+        src={activeImageSrc}
         alt={article.title}
-        onError={() => setImgError(true)}
+        onError={handleImageError}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
         loading="lazy"
         referrerPolicy="no-referrer"
