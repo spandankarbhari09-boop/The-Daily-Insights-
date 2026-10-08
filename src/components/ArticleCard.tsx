@@ -116,8 +116,12 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               </span>
             </div>
 
-            <span className="text-amber-800 dark:text-amber-400 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1">
-              <span>Read</span>
+            <span 
+              className="text-amber-800 dark:text-amber-400 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1"
+              title={`Read story: ${article.title}`}
+              aria-label={`Read story: ${article.title}`}
+            >
+              <span>Read in-depth article</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </span>
           </div>
@@ -198,9 +202,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
           <button
             onClick={() => onSelect(article)}
+            title={`Read complete story: ${article.title}`}
+            aria-label={`Read complete story: ${article.title}`}
             className="px-3 py-1 text-xs font-semibold text-stone-800 dark:text-stone-200 hover:text-amber-800 dark:hover:text-amber-400 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded transition-colors flex items-center gap-1"
           >
-            <span>Read More</span>
+            <span>Read full story</span>
             <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>

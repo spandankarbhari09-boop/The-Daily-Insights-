@@ -34,6 +34,13 @@ export interface ArticleSection {
   keyPoints?: string[];
 }
 
+export interface AnchorLink {
+  text: string;
+  targetId: string;
+  category?: CategoryId;
+  description?: string;
+}
+
 export interface Article {
   id: string;
   slug: string;
@@ -56,6 +63,7 @@ export interface Article {
   fastFacts?: { label: string; value: string }[];
   deepDiveBox?: { title: string; content: string };
   faq?: { question: string; answer: string }[];
+  anchorLinks?: AnchorLink[];
   sections: ArticleSection[];
 }
 

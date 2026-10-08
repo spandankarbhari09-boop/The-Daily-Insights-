@@ -126,9 +126,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                 <button
                   onClick={() => onSelectArticle(leadArticle)}
+                  title={`Read feature story: ${leadArticle.title}`}
+                  aria-label={`Read feature story: ${leadArticle.title}`}
                   className="text-xs sm:text-sm font-semibold text-amber-800 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-300 flex items-center gap-1 group whitespace-nowrap"
                 >
-                  <span>Read Article</span>
+                  <span>Read feature story</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

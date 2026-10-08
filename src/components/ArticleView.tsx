@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   ArrowLeft,
+  ArrowRight,
   Clock,
   Calendar,
   Share2,
   Bookmark,
   Check,
+  Compass,
   Twitter,
   Facebook,
   Linkedin,
@@ -15,7 +17,7 @@ import {
   User,
 } from 'lucide-react';
 import { Article, CategoryId, Comment } from '../types/blog';
-import { getRelatedArticles } from '../data/articles';
+import { getRelatedArticles, getArticleBySlug } from '../data/articles';
 import { CATEGORY_FALLBACK_IMAGES } from '../data/categories';
 import { ArticleCard } from './ArticleCard';
 import { useBookmarks } from '../context/BookmarkContext';
@@ -101,6 +103,68 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
+  };
+
+  const handleTargetNavigation = (target: string) => {
+    const cleanTarget = target.replace(/^#/, '').trim();
+    if (cleanTarget.startsWith('category:')) {
+      const catId = cleanTarget.replace('category:', '') as CategoryId;
+      onBackToCategory(catId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const targetArticle = getArticleBySlug(cleanTarget);
+    if (targetArticle) {
+      onSelectArticle(targetArticle);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const element = document.getElementById(cleanTarget);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const renderParagraphWithLinks = (text: string) => {
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const parts: (string | React.ReactNode)[] = [];
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = linkRegex.exec(text)) !== null) {
+      const [fullMatch, anchorText, target] = match;
+      const matchIndex = match.index;
+
+      if (matchIndex > lastIndex) {
+        parts.push(text.substring(lastIndex, matchIndex));
+      }
+
+      parts.push(
+        <a
+          key={matchIndex}
+          href={target.startsWith('#') ? target : `#article/${target}`}
+          onClick={(e) => {
+            e.preventDefault();
+            handleTargetNavigation(target);
+          }}
+          title={anchorText}
+          aria-label={anchorText}
+          className="font-medium text-amber-800 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-300 underline decoration-amber-500/60 hover:decoration-amber-800 dark:hover:decoration-amber-300 underline-offset-4 transition-colors cursor-pointer"
+        >
+          {anchorText}
+        </a>
+      );
+
+      lastIndex = matchIndex + fullMatch.length;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
   };
 
   const handleShareTwitter = () => {
@@ -343,7 +407,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   key={pIdx}
                   className="text-stone-700 dark:text-stone-300 text-base sm:text-lg leading-[1.8] font-sans-clean"
                 >
-                  {para}
+                  {renderParagraphWithLinks(para)}
                 </p>
               ))}
 
@@ -402,18 +466,58 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           </div>
         )}
 
+        {/* Curated Editorial Guides & Anchor References */}
+        {article.anchorLinks && article.anchorLinks.length > 0 && (
+          <div className="my-10 p-6 sm:p-7 bg-amber-50/50 dark:bg-stone-900 border border-amber-200/80 dark:border-stone-800 rounded-xl">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-400 mb-2">
+              <Compass className="w-4 h-4 text-amber-700 dark:text-amber-400" />
+              <span>Curated Reading Guides &amp; Key References</span>
+            </div>
+            <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mb-4">
+              Explore contextual cross-disciplinary guides with descriptive references:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {article.anchorLinks.map((link, idx) => (
+                <a
+                  key={idx}
+                  href={link.targetId.startsWith('#') ? link.targetId : `#article/${link.targetId}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleTargetNavigation(link.targetId);
+                  }}
+                  title={link.text}
+                  aria-label={link.text}
+                  className="text-left p-4 bg-white dark:bg-stone-800/90 border border-stone-200 dark:border-stone-700/80 rounded-lg hover:border-amber-600 dark:hover:border-amber-500 hover:shadow-sm transition-all group block cursor-pointer"
+                >
+                  <div className="font-semibold text-sm text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-400 flex items-start justify-between gap-2">
+                    <span>{link.text}</span>
+                    <ArrowRight className="w-4 h-4 shrink-0 text-amber-700 dark:text-amber-400 group-hover:translate-x-1 transition-transform mt-0.5" />
+                  </div>
+                  {link.description && (
+                    <p className="mt-1.5 text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                      {link.description}
+                    </p>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Tags */}
-        <div className="mt-12 pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-wrap items-center gap-2 text-xs">
-          <span className="font-semibold text-stone-500 uppercase tracking-wider mr-2">Topics:</span>
-          {article.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-stone-600 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 px-2.5 py-1 rounded"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+        {article.tags && article.tags.length > 0 && (
+          <div className="mt-12 pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-wrap items-center gap-2 text-xs">
+            <span className="font-semibold text-stone-500 uppercase tracking-wider mr-2">Topics:</span>
+            {article.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-stone-600 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 px-2.5 py-1 rounded"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Social Sharing & Action Bar */}
         <div className="mt-8 p-4 bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">
@@ -484,13 +588,13 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-stone-900 dark:bg-stone-100 dark:text-stone-900 rounded hover:bg-stone-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to All {article.categoryName} Stories</span>
+            <span>Explore All {article.categoryName} Stories</span>
           </button>
           <button
             onClick={onBackToHome}
             className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
           >
-            Back to Front Page →
+            Return to Front Page &amp; Top Headlines →
           </button>
         </div>
 
@@ -597,7 +701,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                 onClick={() => onBackToCategory(article.category)}
                 className="text-xs sm:text-sm font-semibold text-amber-800 dark:text-amber-400 hover:underline"
               >
-                View all stories →
+                See all {article.categoryName} stories →
               </button>
             </div>
 

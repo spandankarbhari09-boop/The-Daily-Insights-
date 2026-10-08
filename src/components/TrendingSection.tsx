@@ -92,9 +92,11 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                   </div>
                   <button
                     onClick={() => onSelectArticle(topTrending)}
+                    title={`Read complete story: ${topTrending.title}`}
+                    aria-label={`Read complete story: ${topTrending.title}`}
                     className="px-3.5 py-1.5 text-xs font-semibold text-white bg-stone-900 dark:bg-stone-100 dark:text-stone-900 rounded hover:bg-stone-800 transition-colors flex items-center gap-1.5"
                   >
-                    <span>Read More</span>
+                    <span>Read in-depth analysis</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
