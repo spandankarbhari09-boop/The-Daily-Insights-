@@ -82,7 +82,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           ],
           publisher: {
             '@type': 'Organization',
-            name: 'THE DAILY PULSE',
+            name: 'The Daily Insights',
             url: window.location.origin,
           },
           keywords: [keywords.mainKeyword, ...keywords.relatedKeywords],
@@ -105,7 +105,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           url: window.location.href,
           publisher: {
             '@type': 'Organization',
-            name: 'THE DAILY PULSE',
+            name: 'The Daily Insights',
           },
           keywords: [keywords.mainKeyword, ...keywords.relatedKeywords],
           about: [

@@ -161,9 +161,9 @@ export default function App() {
     switch (currentView) {
       case 'home':
         return {
-          title: 'THE DAILY PULSE | Stories, Ideas & Insights for Every Interest',
+          title: 'The Daily Insights | Tech, Business, Lifestyle, AI & More',
           description:
-            'Stories, Ideas & Insights for Every Interest. A modern multi-topic digital magazine covering Sports, Technology, Entertainment, Travel, Business, Health, Education, Automobiles, Food & Lifestyle, and AI.',
+            'Discover the latest insights, trends, and expert analysis across technology, business, lifestyle, artificial intelligence, and more from The Daily Insights.',
           keywords: getPageKeywords('home'),
         };
       case 'category': {
@@ -171,7 +171,7 @@ export default function App() {
         const cat = getCategoryById(catId);
         const kws = getPageKeywords('category', { categoryId: catId });
         return {
-          title: `${cat.name} – ${kws.mainKeyword} | THE DAILY PULSE`,
+          title: `${cat.name} – ${kws.mainKeyword} | The Daily Insights`,
           description: `${cat.tagline}. ${cat.description}`,
           keywords: kws,
         };
@@ -179,7 +179,7 @@ export default function App() {
       case 'article': {
         const kws = getPageKeywords('article', { article: selectedArticle });
         return {
-          title: `${selectedArticle.title} | THE DAILY PULSE`,
+          title: `${selectedArticle.title} | The Daily Insights`,
           description: selectedArticle.excerpt || selectedArticle.subtitle,
           keywords: kws,
           article: selectedArticle,
@@ -188,24 +188,25 @@ export default function App() {
       case 'about': {
         const kws = getPageKeywords('about');
         return {
-          title: 'About The Daily Pulse | Independent Journalism & Cultural Analysis',
+          title: 'About | The Daily Insights - Tech, Business & Lifestyle',
           description:
-            'The Daily Pulse is a multi-topic digital magazine covering the stories, ideas, trends and conversations shaping modern life.',
+            'The Daily Insights delivers deep perspectives, thoughtful analysis, and trend reporting on technology, business, culture, and modern lifestyle.',
           keywords: kws,
         };
       }
       case 'bookmarks': {
         const kws = getPageKeywords('bookmarks');
         return {
-          title: 'Your Reading List | Curated Reading Archive | THE DAILY PULSE',
-          description: 'Articles and essays saved for offline reflection and quiet reading.',
+          title: 'Saved Reading List | The Daily Insights',
+          description: 'Articles and essays saved for offline reflection and quiet reading on The Daily Insights.',
           keywords: kws,
         };
       }
       default:
         return {
-          title: 'THE DAILY PULSE | Stories, Ideas & Insights for Every Interest',
-          description: 'Stories, Ideas & Insights for Every Interest.',
+          title: 'The Daily Insights | Tech, Business, Lifestyle, AI & More',
+          description:
+            'Discover the latest insights, trends, and expert analysis across technology, business, lifestyle, artificial intelligence, and more from The Daily Insights.',
           keywords: getPageKeywords('home'),
         };
     }
