@@ -1,14 +1,21 @@
 import React from 'react';
 import { ArrowLeft, BookOpen, ShieldCheck, Globe2, Award } from 'lucide-react';
 import { CATEGORIES } from '../data/categories';
+import { ABOUT_PAGE_KEYWORDS } from '../data/keywords';
+import { PageKeywordsBadge } from './PageKeywordsBadge';
 import heroImg from '../assets/images/hero_magazine_lead_1791168984880.jpg';
 
 interface AboutViewProps {
   onBackToHome: () => void;
   onSelectCategory: (categoryId: any) => void;
+  onOpenSearchKeyword?: (keyword: string) => void;
 }
 
-export const AboutView: React.FC<AboutViewProps> = ({ onBackToHome, onSelectCategory }) => {
+export const AboutView: React.FC<AboutViewProps> = ({
+  onBackToHome,
+  onSelectCategory,
+  onOpenSearchKeyword,
+}) => {
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 py-8 sm:py-14">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -31,6 +38,16 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBackToHome, onSelectCate
           <p className="mt-4 text-lg sm:text-xl font-editorial italic text-stone-600 dark:text-stone-300 max-w-2xl mx-auto">
             &ldquo;Stories, Ideas &amp; Insights for Every Interest.&rdquo;
           </p>
+
+          {/* About Page Focus Keywords: 1 Main Keyword + 2 Related Keywords */}
+          <div className="mt-8 max-w-2xl mx-auto text-left">
+            <PageKeywordsBadge
+              keywords={ABOUT_PAGE_KEYWORDS}
+              title="About Page Focus Keywords"
+              variant="banner"
+              onKeywordClick={onOpenSearchKeyword}
+            />
+          </div>
         </div>
 
         {/* Hero Image */}

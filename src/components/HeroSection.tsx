@@ -1,12 +1,15 @@
 import React from 'react';
 import { ArrowRight, Flame, Clock, Sparkles } from 'lucide-react';
 import { Article } from '../types/blog';
+import { HOME_PAGE_KEYWORDS } from '../data/keywords';
+import { PageKeywordsBadge } from './PageKeywordsBadge';
 
 interface HeroSectionProps {
   leadArticle: Article;
   onSelectArticle: (article: Article) => void;
   onExploreClick: () => void;
   onTrendingClick: () => void;
+  onOpenSearchKeyword?: (keyword: string) => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
@@ -14,6 +17,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectArticle,
   onExploreClick,
   onTrendingClick,
+  onOpenSearchKeyword,
 }) => {
   return (
     <section className="border-b border-stone-200 dark:border-stone-800 bg-stone-100/40 dark:bg-stone-900/20 py-10 sm:py-16">
@@ -50,6 +54,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <span>Trending Now</span>
             </button>
           </div>
+        </div>
+
+        {/* Front Page Focus Keywords: 1 Main Keyword + 2 Related Keywords */}
+        <div className="mb-8">
+          <PageKeywordsBadge
+            keywords={HOME_PAGE_KEYWORDS}
+            title="Front Page Focus Keywords"
+            variant="banner"
+            onKeywordClick={onOpenSearchKeyword}
+          />
         </div>
 
         {/* Lead Story Feature Card (Editorial Broadsheet Style) */}

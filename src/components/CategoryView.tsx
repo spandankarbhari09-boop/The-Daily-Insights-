@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ArrowLeft, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { Article, CategoryId } from '../types/blog';
 import { getCategoryById } from '../data/categories';
+import { getCategoryKeywords } from '../data/keywords';
+import { PageKeywordsBadge } from './PageKeywordsBadge';
 import { ArticleCard } from './ArticleCard';
 
 interface CategoryViewProps {
@@ -9,6 +11,7 @@ interface CategoryViewProps {
   articles: Article[];
   onSelectArticle: (article: Article) => void;
   onBackToHome: () => void;
+  onOpenSearchKeyword?: (keyword: string) => void;
 }
 
 export const CategoryView: React.FC<CategoryViewProps> = ({
@@ -16,6 +19,7 @@ export const CategoryView: React.FC<CategoryViewProps> = ({
   articles,
   onSelectArticle,
   onBackToHome,
+  onOpenSearchKeyword,
 }) => {
   const category = getCategoryById(categoryId);
   const catArticles = articles.filter((a) => a.category === categoryId);
@@ -96,6 +100,16 @@ export const CategoryView: React.FC<CategoryViewProps> = ({
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Category Focus Keywords: 1 Main Keyword + 2 Related Keywords */}
+            <div className="mt-6 pt-5 border-t border-stone-100 dark:border-stone-800">
+              <PageKeywordsBadge
+                keywords={getCategoryKeywords(categoryId)}
+                title={`${category.name} Focus Keywords`}
+                variant="banner"
+                onKeywordClick={onOpenSearchKeyword}
+              />
             </div>
           </div>
         </div>

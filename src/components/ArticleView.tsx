@@ -19,6 +19,8 @@ import {
 import { Article, CategoryId, Comment } from '../types/blog';
 import { getRelatedArticles, getArticleBySlug } from '../data/articles';
 import { CATEGORY_FALLBACK_IMAGES } from '../data/categories';
+import { getArticleKeywords } from '../data/keywords';
+import { PageKeywordsBadge } from './PageKeywordsBadge';
 import { ArticleCard } from './ArticleCard';
 import { useBookmarks } from '../context/BookmarkContext';
 
@@ -27,6 +29,7 @@ interface ArticleViewProps {
   onBackToHome: () => void;
   onBackToCategory: (categoryId: CategoryId) => void;
   onSelectArticle: (article: Article) => void;
+  onOpenSearchKeyword?: (keyword: string) => void;
 }
 
 export const ArticleView: React.FC<ArticleViewProps> = ({
@@ -34,10 +37,12 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   onBackToHome,
   onBackToCategory,
   onSelectArticle,
+  onOpenSearchKeyword,
 }) => {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(article.id);
   const related = getRelatedArticles(article, 3);
+  const articleKeywords = getArticleKeywords(article);
 
   const [copied, setCopied] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -292,6 +297,16 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           {article.subtitle}
         </p>
 
+        {/* Article Focus Keywords: 1 Main Keyword + 2 Related Keywords */}
+        <div className="mt-6">
+          <PageKeywordsBadge
+            keywords={articleKeywords}
+            title="Article Focus Keywords"
+            variant="inline"
+            onKeywordClick={onOpenSearchKeyword}
+          />
+        </div>
+
         {/* Author Byline Bar */}
         <div className="mt-8 pt-6 pb-6 border-y border-stone-200 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -518,6 +533,16 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             ))}
           </div>
         )}
+
+        {/* Article Keywords Index Card: 1 Main Keyword + 2 Related Keywords */}
+        <div className="mt-8">
+          <PageKeywordsBadge
+            keywords={articleKeywords}
+            title="Article Focus & Related Keywords"
+            variant="card"
+            onKeywordClick={onOpenSearchKeyword}
+          />
+        </div>
 
         {/* Social Sharing & Action Bar */}
         <div className="mt-8 p-4 bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">

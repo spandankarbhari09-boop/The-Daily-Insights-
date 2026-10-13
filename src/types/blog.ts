@@ -10,6 +10,11 @@ export type CategoryId =
   | 'food'
   | 'ai';
 
+export interface PageKeywords {
+  mainKeyword: string;
+  relatedKeywords: [string, string];
+}
+
 export interface CategoryInfo {
   id: CategoryId;
   name: string;
@@ -18,6 +23,8 @@ export interface CategoryInfo {
   focusTopics: string[];
   color: string;
   iconName: string;
+  mainKeyword?: string;
+  relatedKeywords?: [string, string];
 }
 
 export interface ArticleAuthor {
@@ -59,6 +66,8 @@ export interface Article {
   trendingRank?: number;
   popularRank?: number;
   tags: string[];
+  mainKeyword?: string;
+  relatedKeywords?: [string, string];
   keyTakeaways: string[];
   fastFacts?: { label: string; value: string }[];
   deepDiveBox?: { title: string; content: string };

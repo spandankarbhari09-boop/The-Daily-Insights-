@@ -1,6 +1,8 @@
 import React from 'react';
 import { Bookmark, ArrowLeft, Trash2 } from 'lucide-react';
 import { Article } from '../types/blog';
+import { BOOKMARKS_PAGE_KEYWORDS } from '../data/keywords';
+import { PageKeywordsBadge } from './PageKeywordsBadge';
 import { ArticleCard } from './ArticleCard';
 import { useBookmarks } from '../context/BookmarkContext';
 
@@ -8,12 +10,14 @@ interface BookmarksViewProps {
   articles: Article[];
   onSelectArticle: (article: Article) => void;
   onBackToHome: () => void;
+  onOpenSearchKeyword?: (keyword: string) => void;
 }
 
 export const BookmarksView: React.FC<BookmarksViewProps> = ({
   articles,
   onSelectArticle,
   onBackToHome,
+  onOpenSearchKeyword,
 }) => {
   const { bookmarks, clearBookmarks } = useBookmarks();
   const savedArticles = articles.filter((a) => bookmarks.includes(a.id));
@@ -49,6 +53,16 @@ export const BookmarksView: React.FC<BookmarksViewProps> = ({
               <span>Clear List</span>
             </button>
           )}
+        </div>
+
+        {/* Bookmarks Page Focus Keywords: 1 Main Keyword + 2 Related Keywords */}
+        <div className="mb-8">
+          <PageKeywordsBadge
+            keywords={BOOKMARKS_PAGE_KEYWORDS}
+            title="Reading List Focus Keywords"
+            variant="banner"
+            onKeywordClick={onOpenSearchKeyword}
+          />
         </div>
 
         {savedArticles.length === 0 ? (

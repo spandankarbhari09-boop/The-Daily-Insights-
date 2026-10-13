@@ -9,6 +9,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Football', 'Cricket', 'Tennis', 'Basketball', 'Formula 1', 'Athletic Performance', 'Sports Tech'],
     color: '#0284c7', // Sky / Ocean
     iconName: 'Trophy',
+    mainKeyword: 'Sports Analytics & Strategy',
+    relatedKeywords: ['Athletic Performance', 'Championship Competition'],
   },
   {
     id: 'technology',
@@ -18,6 +20,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Smartphones', 'Wearables', 'Consumer Tech', 'Cybersecurity', 'Apps & Platforms', 'Future Tech'],
     color: '#4f46e5', // Indigo
     iconName: 'Cpu',
+    mainKeyword: 'Modern Technology Trends',
+    relatedKeywords: ['Digital Innovation', 'Future Computing Systems'],
   },
   {
     id: 'entertainment',
@@ -27,6 +31,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Cinema', 'Streaming Services', 'Music Industry', 'Pop Culture', 'Series & Television', 'Creative Arts'],
     color: '#9333ea', // Purple
     iconName: 'Film',
+    mainKeyword: 'Contemporary Arts & Cinema',
+    relatedKeywords: ['Prestige Television & Film', 'Music Industry Dynamics'],
   },
   {
     id: 'travel',
@@ -36,6 +42,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Global Destinations', 'Solo Journeys', 'Budget Travel', 'Eco Tourism', 'Hidden Gems', 'Travel Gear'],
     color: '#059669', // Emerald
     iconName: 'Compass',
+    mainKeyword: 'Mindful Global Travel',
+    relatedKeywords: ['Cultural Expeditions', 'Sustainable Adventure Tourism'],
   },
   {
     id: 'business',
@@ -45,6 +53,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Startups', 'Personal Finance', 'Venture Capital', 'Digital Marketing', 'Global Economy', 'Workplace Culture'],
     color: '#b45309', // Amber / Gold
     iconName: 'TrendingUp',
+    mainKeyword: 'Global Business Strategy',
+    relatedKeywords: ['Market Economics', 'Venture Innovation & Capital'],
   },
   {
     id: 'health',
@@ -54,6 +64,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Sleep Hygiene', 'Fitness Routines', 'Nutrition', 'Mental Health', 'Daily Habits', 'Preventive Living'],
     color: '#16a34a', // Green
     iconName: 'HeartPulse',
+    mainKeyword: 'Evidence-Based Health & Wellness',
+    relatedKeywords: ['Preventive Longevity', 'Restorative Physical Habits'],
   },
   {
     id: 'education',
@@ -63,6 +75,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Study Methods', 'Online Learning', 'Future Careers', 'Cognitive Science', 'Student Life', 'Critical Thinking'],
     color: '#ea580c', // Orange
     iconName: 'GraduationCap',
+    mainKeyword: 'Modern Cognitive Education',
+    relatedKeywords: ['Lifelong Skill Acquisition', 'Digital Learning Frontiers'],
   },
   {
     id: 'automobiles',
@@ -72,6 +86,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Electric Vehicles', 'Supercars', 'Autonomous Driving', 'Motorcycles', 'Car Design', 'Track Testing'],
     color: '#dc2626', // Red
     iconName: 'Car',
+    mainKeyword: 'Automotive Engineering & Mobility',
+    relatedKeywords: ['Electric Vehicle Transition', 'Autonomous Driving Systems'],
   },
   {
     id: 'food',
@@ -81,6 +97,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Café Culture', 'Street Food', 'Culinary Trends', 'Home Cooking', 'Sustainable Design', 'Living Spaces'],
     color: '#d97706', // Warm Amber
     iconName: 'Utensils',
+    mainKeyword: 'Artisanal Food & Gastronomy',
+    relatedKeywords: ['Culinary Culture', 'Specialty Coffee & Craft Living'],
   },
   {
     id: 'ai',
@@ -90,6 +108,8 @@ export const CATEGORIES: CategoryInfo[] = [
     focusTopics: ['Business Automation', 'Creative Tools', 'AI in Education', 'Everyday Productivity', 'Model Ethics', 'Future Tech'],
     color: '#0891b2', // Cyan
     iconName: 'Sparkles',
+    mainKeyword: 'Artificial Intelligence Horizons',
+    relatedKeywords: ['Machine Learning Automation', 'Autonomous Agent Systems'],
   },
 ];
 

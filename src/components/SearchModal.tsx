@@ -3,11 +3,14 @@ import { Search, X, Clock, ArrowRight, Tag, User } from 'lucide-react';
 import { Article, CategoryId } from '../types/blog';
 import { CATEGORIES } from '../data/categories';
 
+import { getArticleKeywords } from '../data/keywords';
+
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   articles: Article[];
   onSelectArticle: (article: Article) => void;
+  initialQuery?: string;
 }
 
 export const SearchModal: React.FC<SearchModalProps> = ({
@@ -15,13 +18,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onClose,
   articles,
   onSelectArticle,
+  initialQuery = '',
 }) => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
+      if (initialQuery) {
+        setQuery(initialQuery);
+      }
       setTimeout(() => inputRef.current?.focus(), 50);
       document.body.style.overflow = 'hidden';
     } else {
@@ -32,7 +39,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [isOpen, initialQuery]);
 
   // Handle escape key
   useEffect(() => {
@@ -66,8 +73,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     const matchesAuthor = article.author.name.toLowerCase().includes(q);
     const matchesExcerpt = article.excerpt.toLowerCase().includes(q);
     const matchesTags = article.tags.some((tag) => tag.toLowerCase().includes(q));
+    const kws = getArticleKeywords(article);
+    const matchesKeywords =
+      kws.mainKeyword.toLowerCase().includes(q) ||
+      kws.relatedKeywords.some((rk) => rk.toLowerCase().includes(q));
 
-    return matchesCategory && (matchesTitle || matchesCategoryName || matchesAuthor || matchesExcerpt || matchesTags);
+    return matchesCategory && (matchesTitle || matchesCategoryName || matchesAuthor || matchesExcerpt || matchesTags || matchesKeywords);
   });
 
   const handleSelect = (article: Article) => {

@@ -18,13 +18,15 @@ import { SearchModal } from './components/SearchModal';
 import { ContactModal, PrivacyModal, TermsModal } from './components/Modals';
 import { Footer } from './components/Footer';
 import { BackToTop } from './components/BackToTop';
+import { SEOHead } from './components/SEOHead';
 import {
   ARTICLES,
   getFeaturedArticle,
   getTrendingArticles,
   getArticleBySlug,
 } from './data/articles';
-import { CATEGORIES } from './data/categories';
+import { CATEGORIES, getCategoryById } from './data/categories';
+import { getPageKeywords } from './data/keywords';
 import { Article, CategoryId } from './types/blog';
 
 export default function App() {
@@ -39,9 +41,15 @@ export default function App() {
 
   // Modals state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchInitialQuery, setSearchInitialQuery] = useState('');
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
+
+  const handleOpenSearchKeyword = (keyword: string) => {
+    setSearchInitialQuery(keyword);
+    setIsSearchOpen(true);
+  };
 
   const featuredArticle = getFeaturedArticle();
   const trendingArticles = getTrendingArticles();
@@ -148,10 +156,75 @@ export default function App() {
     }
   };
 
+  // Synchronize SEO & Keywords metadata for every page
+  const getPageSEO = () => {
+    switch (currentView) {
+      case 'home':
+        return {
+          title: 'THE DAILY PULSE | Stories, Ideas & Insights for Every Interest',
+          description:
+            'Stories, Ideas & Insights for Every Interest. A modern multi-topic digital magazine covering Sports, Technology, Entertainment, Travel, Business, Health, Education, Automobiles, Food & Lifestyle, and AI.',
+          keywords: getPageKeywords('home'),
+        };
+      case 'category': {
+        const catId = selectedCategoryId === 'all' ? 'sports' : selectedCategoryId;
+        const cat = getCategoryById(catId);
+        const kws = getPageKeywords('category', { categoryId: catId });
+        return {
+          title: `${cat.name} – ${kws.mainKeyword} | THE DAILY PULSE`,
+          description: `${cat.tagline}. ${cat.description}`,
+          keywords: kws,
+        };
+      }
+      case 'article': {
+        const kws = getPageKeywords('article', { article: selectedArticle });
+        return {
+          title: `${selectedArticle.title} | THE DAILY PULSE`,
+          description: selectedArticle.excerpt || selectedArticle.subtitle,
+          keywords: kws,
+          article: selectedArticle,
+        };
+      }
+      case 'about': {
+        const kws = getPageKeywords('about');
+        return {
+          title: 'About The Daily Pulse | Independent Journalism & Cultural Analysis',
+          description:
+            'The Daily Pulse is a multi-topic digital magazine covering the stories, ideas, trends and conversations shaping modern life.',
+          keywords: kws,
+        };
+      }
+      case 'bookmarks': {
+        const kws = getPageKeywords('bookmarks');
+        return {
+          title: 'Your Reading List | Curated Reading Archive | THE DAILY PULSE',
+          description: 'Articles and essays saved for offline reflection and quiet reading.',
+          keywords: kws,
+        };
+      }
+      default:
+        return {
+          title: 'THE DAILY PULSE | Stories, Ideas & Insights for Every Interest',
+          description: 'Stories, Ideas & Insights for Every Interest.',
+          keywords: getPageKeywords('home'),
+        };
+    }
+  };
+
+  const seo = getPageSEO();
+
   return (
     <ThemeProvider>
       <BookmarkProvider>
         <div className="min-h-screen flex flex-col bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors">
+          {/* Synchronize SEO Head & Dynamic Meta Keywords */}
+          <SEOHead
+            title={seo.title}
+            description={seo.description}
+            keywords={seo.keywords}
+            article={seo.article}
+          />
+
           {/* Universal Header */}
           <Header
             currentCategory={selectedCategoryId}
@@ -173,6 +246,7 @@ export default function App() {
                   onSelectArticle={handleSelectArticle}
                   onExploreClick={handleExploreClick}
                   onTrendingClick={handleTrendingClick}
+                  onOpenSearchKeyword={handleOpenSearchKeyword}
                 />
 
                 {/* Trending Stories Section */}
@@ -245,6 +319,7 @@ export default function App() {
                 articles={ARTICLES}
                 onSelectArticle={handleSelectArticle}
                 onBackToHome={handleNavigateHome}
+                onOpenSearchKeyword={handleOpenSearchKeyword}
               />
             )}
 
@@ -254,6 +329,7 @@ export default function App() {
                 onBackToHome={handleNavigateHome}
                 onBackToCategory={handleSelectCategory}
                 onSelectArticle={handleSelectArticle}
+                onOpenSearchKeyword={handleOpenSearchKeyword}
               />
             )}
 
@@ -261,6 +337,7 @@ export default function App() {
               <AboutView
                 onBackToHome={handleNavigateHome}
                 onSelectCategory={handleSelectCategory}
+                onOpenSearchKeyword={handleOpenSearchKeyword}
               />
             )}
 
@@ -269,6 +346,7 @@ export default function App() {
                 articles={ARTICLES}
                 onSelectArticle={handleSelectArticle}
                 onBackToHome={handleNavigateHome}
+                onOpenSearchKeyword={handleOpenSearchKeyword}
               />
             )}
           </main>
@@ -289,9 +367,13 @@ export default function App() {
           {/* Search Modal */}
           <SearchModal
             isOpen={isSearchOpen}
-            onClose={() => setIsSearchOpen(false)}
+            onClose={() => {
+              setIsSearchOpen(false);
+              setSearchInitialQuery('');
+            }}
             articles={ARTICLES}
             onSelectArticle={handleSelectArticle}
+            initialQuery={searchInitialQuery}
           />
 
           {/* Working Dialog Modals */}
