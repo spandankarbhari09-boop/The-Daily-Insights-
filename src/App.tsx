@@ -29,12 +29,70 @@ import { CATEGORIES, getCategoryById } from './data/categories';
 import { getPageKeywords } from './data/keywords';
 import { Article, CategoryId } from './types/blog';
 
+const VALID_CATEGORIES: CategoryId[] = [
+  'sports',
+  'technology',
+  'entertainment',
+  'travel',
+  'business',
+  'health',
+  'education',
+  'automobiles',
+  'food',
+  'ai',
+];
+
+function getInitialRouteState(): {
+  view: 'home' | 'category' | 'article' | 'about' | 'bookmarks';
+  categoryId: CategoryId | 'all';
+  article: Article;
+} {
+  const defaultArticle = getFeaturedArticle();
+  if (typeof window === 'undefined') {
+    return { view: 'home', categoryId: 'all', article: defaultArticle };
+  }
+
+  const rawHash = window.location.hash.replace(/^#\/?/, '').trim();
+  const rawPath = window.location.pathname.replace(/^\/+/, '').trim();
+  const route = rawHash || rawPath;
+
+  if (!route) {
+    return { view: 'home', categoryId: 'all', article: defaultArticle };
+  }
+
+  if (route === 'about') {
+    return { view: 'about', categoryId: 'all', article: defaultArticle };
+  }
+
+  if (route === 'bookmarks') {
+    return { view: 'bookmarks', categoryId: 'all', article: defaultArticle };
+  }
+
+  if (route.startsWith('category/')) {
+    const catId = route.replace('category/', '') as CategoryId;
+    return { view: 'category', categoryId: catId, article: defaultArticle };
+  }
+
+  if (VALID_CATEGORIES.includes(route as CategoryId)) {
+    return { view: 'category', categoryId: route as CategoryId, article: defaultArticle };
+  }
+
+  const articleQuery = route.startsWith('article/') ? route.replace('article/', '') : route;
+  const found = getArticleBySlug(articleQuery);
+  if (found) {
+    return { view: 'article', categoryId: found.category as CategoryId, article: found };
+  }
+
+  return { view: 'home', categoryId: 'all', article: defaultArticle };
+}
+
 export default function App() {
+  const [initialRoute] = useState(() => getInitialRouteState());
   const [currentView, setCurrentView] = useState<
     'home' | 'category' | 'article' | 'about' | 'bookmarks'
-  >('home');
-  const [selectedCategoryId, setSelectedCategoryId] = useState<CategoryId | 'all'>('all');
-  const [selectedArticle, setSelectedArticle] = useState<Article>(getFeaturedArticle());
+  >(initialRoute.view);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<CategoryId | 'all'>(initialRoute.categoryId);
+  const [selectedArticle, setSelectedArticle] = useState<Article>(initialRoute.article);
 
   // Home category quick filter
   const [homeCategoryFilter, setHomeCategoryFilter] = useState<CategoryId | 'all'>('all');
@@ -71,12 +129,26 @@ export default function App() {
 
       if (route === 'about') {
         setCurrentView('about');
+        if (rawHash) {
+          try {
+            window.history.replaceState({ view: 'about' }, '', '/about');
+          } catch {
+            // keep hash
+          }
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
       if (route === 'bookmarks') {
         setCurrentView('bookmarks');
+        if (rawHash) {
+          try {
+            window.history.replaceState({ view: 'bookmarks' }, '', '/bookmarks');
+          } catch {
+            // keep hash
+          }
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -85,27 +157,28 @@ export default function App() {
         const catId = route.replace('category/', '') as CategoryId;
         setSelectedCategoryId(catId);
         setCurrentView('category');
+        if (rawHash) {
+          try {
+            window.history.replaceState({ view: 'category', categoryId: catId }, '', `/category/${catId}`);
+          } catch {
+            // keep hash
+          }
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      const validCategories: CategoryId[] = [
-        'sports',
-        'technology',
-        'entertainment',
-        'travel',
-        'business',
-        'health',
-        'education',
-        'automobiles',
-        'food',
-        'ai',
-      ];
-
       // Direct category path e.g. "technology"
-      if (validCategories.includes(route as CategoryId)) {
+      if (VALID_CATEGORIES.includes(route as CategoryId)) {
         setSelectedCategoryId(route as CategoryId);
         setCurrentView('category');
+        if (rawHash) {
+          try {
+            window.history.replaceState({ view: 'category', categoryId: route }, '', `/category/${route}`);
+          } catch {
+            // keep hash
+          }
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -116,6 +189,18 @@ export default function App() {
       if (found) {
         setSelectedArticle(found);
         setCurrentView('article');
+        // If accessed via hash or legacy prefix, cleanly update browser address bar
+        if (rawHash || route.startsWith('article/')) {
+          try {
+            window.history.replaceState(
+              { view: 'article', slug: found.slug, category: found.category },
+              '',
+              `/${found.category}/${found.slug}`
+            );
+          } catch {
+            // keep hash
+          }
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
