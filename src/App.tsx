@@ -54,57 +54,92 @@ export default function App() {
   const featuredArticle = getFeaturedArticle();
   const trendingArticles = getTrendingArticles();
 
-  // Hash-based routing synchronization
+  // Clean URL and Hash-based routing synchronization
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (!hash) {
+    const handleRouteChange = () => {
+      // 1. Check hash first if present (e.g. #technology/ai-trends, #article/ai-trends)
+      const rawHash = window.location.hash.replace(/^#\/?/, '').trim();
+      // 2. Check pathname (e.g. /technology/ai-trends, /technology, /about)
+      const rawPath = window.location.pathname.replace(/^\/+/, '').trim();
+
+      const route = rawHash || rawPath;
+
+      if (!route) {
         setCurrentView('home');
         return;
       }
 
-      if (hash === 'about') {
+      if (route === 'about') {
         setCurrentView('about');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      if (hash === 'bookmarks') {
+      if (route === 'bookmarks') {
         setCurrentView('bookmarks');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      if (hash.startsWith('category/')) {
-        const catId = hash.replace('category/', '') as CategoryId;
+      if (route.startsWith('category/')) {
+        const catId = route.replace('category/', '') as CategoryId;
         setSelectedCategoryId(catId);
         setCurrentView('category');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      if (hash.startsWith('article/')) {
-        const slug = hash.replace('article/', '');
-        const found = getArticleBySlug(slug);
-        if (found) {
-          setSelectedArticle(found);
-          setCurrentView('article');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+      const validCategories: CategoryId[] = [
+        'sports',
+        'technology',
+        'entertainment',
+        'travel',
+        'business',
+        'health',
+        'education',
+        'automobiles',
+        'food',
+        'ai',
+      ];
+
+      // Direct category path e.g. "technology"
+      if (validCategories.includes(route as CategoryId)) {
+        setSelectedCategoryId(route as CategoryId);
+        setCurrentView('category');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // Article route (e.g. "technology/ai-trends", "article/ai-trends", "ai-trends")
+      const articleQuery = route.startsWith('article/') ? route.replace('article/', '') : route;
+      const found = getArticleBySlug(articleQuery);
+      if (found) {
+        setSelectedArticle(found);
+        setCurrentView('article');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleRouteChange();
+    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener('hashchange', handleRouteChange);
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener('hashchange', handleRouteChange);
+    };
   }, []);
 
-  // Navigation handlers
+  // Navigation handlers with clean URL updating
   const handleSelectArticle = (article: Article) => {
     setSelectedArticle(article);
     setCurrentView('article');
-    window.location.hash = `article/${article.slug}`;
+    const targetPath = `/${article.category}/${article.slug}`;
+    try {
+      window.history.pushState({ view: 'article', slug: article.slug, category: article.category }, '', targetPath);
+    } catch {
+      window.location.hash = `${article.category}/${article.slug}`;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -112,12 +147,20 @@ export default function App() {
     if (categoryId === 'all') {
       setCurrentView('home');
       setSelectedCategoryId('all');
-      window.location.hash = '';
+      try {
+        window.history.pushState({ view: 'home' }, '', '/');
+      } catch {
+        window.location.hash = '';
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setSelectedCategoryId(categoryId);
       setCurrentView('category');
-      window.location.hash = `category/${categoryId}`;
+      try {
+        window.history.pushState({ view: 'category', categoryId }, '', `/category/${categoryId}`);
+      } catch {
+        window.location.hash = `category/${categoryId}`;
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -126,19 +169,31 @@ export default function App() {
     setCurrentView('home');
     setSelectedCategoryId('all');
     setHomeCategoryFilter('all');
-    window.location.hash = '';
+    try {
+      window.history.pushState({ view: 'home' }, '', '/');
+    } catch {
+      window.location.hash = '';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateAbout = () => {
     setCurrentView('about');
-    window.location.hash = 'about';
+    try {
+      window.history.pushState({ view: 'about' }, '', '/about');
+    } catch {
+      window.location.hash = 'about';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateBookmarks = () => {
     setCurrentView('bookmarks');
-    window.location.hash = 'bookmarks';
+    try {
+      window.history.pushState({ view: 'bookmarks' }, '', '/bookmarks');
+    } catch {
+      window.location.hash = 'bookmarks';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -165,6 +220,7 @@ export default function App() {
           description:
             'Discover the latest insights, trends, and expert analysis across technology, business, lifestyle, artificial intelligence, and more from The Daily Insights.',
           keywords: getPageKeywords('home'),
+          canonicalPath: '/',
         };
       case 'category': {
         const catId = selectedCategoryId === 'all' ? 'sports' : selectedCategoryId;
@@ -174,6 +230,7 @@ export default function App() {
           title: `${cat.name} – ${kws.mainKeyword} | The Daily Insights`,
           description: `${cat.tagline}. ${cat.description}`,
           keywords: kws,
+          canonicalPath: `/category/${catId}`,
         };
       }
       case 'article': {
@@ -183,6 +240,7 @@ export default function App() {
           description: selectedArticle.excerpt || selectedArticle.subtitle,
           keywords: kws,
           article: selectedArticle,
+          canonicalPath: `/${selectedArticle.category}/${selectedArticle.slug}`,
         };
       }
       case 'about': {
@@ -192,6 +250,7 @@ export default function App() {
           description:
             'The Daily Insights delivers deep perspectives, thoughtful analysis, and trend reporting on technology, business, culture, and modern lifestyle.',
           keywords: kws,
+          canonicalPath: '/about',
         };
       }
       case 'bookmarks': {
@@ -200,6 +259,7 @@ export default function App() {
           title: 'Saved Reading List | The Daily Insights',
           description: 'Articles and essays saved for offline reflection and quiet reading on The Daily Insights.',
           keywords: kws,
+          canonicalPath: '/bookmarks',
         };
       }
       default:
@@ -208,6 +268,7 @@ export default function App() {
           description:
             'Discover the latest insights, trends, and expert analysis across technology, business, lifestyle, artificial intelligence, and more from The Daily Insights.',
           keywords: getPageKeywords('home'),
+          canonicalPath: '/',
         };
     }
   };
@@ -224,6 +285,7 @@ export default function App() {
             description={seo.description}
             keywords={seo.keywords}
             article={seo.article}
+            canonicalPath={seo.canonicalPath}
           />
 
           {/* Universal Header */}

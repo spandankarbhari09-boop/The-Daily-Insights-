@@ -39,10 +39,23 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setMetaTag('name', 'keywords', keywordsString);
     setMetaTag('name', 'news_keywords', keywordsString);
 
-    // 4. Set OpenGraph tags
+    // 4. Set OpenGraph tags & Canonical URL
+    const resolvedUrl = canonicalPath
+      ? `${window.location.origin}${canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`}`
+      : window.location.href;
+
     setMetaTag('property', 'og:title', title);
     setMetaTag('property', 'og:description', description);
     setMetaTag('property', 'og:type', article ? 'article' : 'website');
+    setMetaTag('property', 'og:url', resolvedUrl);
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.href = resolvedUrl;
 
     if (article) {
       setMetaTag('property', 'article:published_time', article.publishedAt);
@@ -70,6 +83,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           '@context': 'https://schema.org',
           '@type': 'NewsArticle',
           headline: article.title,
+          url: resolvedUrl,
           description: article.excerpt || description,
           image: [article.imageUrl],
           datePublished: article.publishedAt,
@@ -114,7 +128,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           '@type': 'WebPage',
           name: title,
           description: description,
-          url: window.location.href,
+          url: resolvedUrl,
           publisher: {
             '@type': 'Organization',
             name: 'The Daily Insights',

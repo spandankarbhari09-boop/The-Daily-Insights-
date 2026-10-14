@@ -4,7 +4,7 @@ import techImg from '../../assets/images/tech_future_wearables_1791169013851.jpg
 export const TECHNOLOGY_ARTICLES: Article[] = [
   {
     id: 'tech-1',
-    slug: '10-technology-trends-that-will-shape-the-next-five-years',
+    slug: 'ai-trends',
     title: '10 Technology Trends That Will Shape the Next Five Years',
     subtitle: 'From neuromorphic silicon and ambient spatial devices to quantum encryption, here is what is truly transforming consumer reality.',
     category: 'technology',

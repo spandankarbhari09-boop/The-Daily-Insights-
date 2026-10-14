@@ -400,6 +400,14 @@ export const ARTICLE_KEYWORDS_MAP: Record<string, PageKeywords> = {
     mainKeyword: 'Five-Year Technology Forecast',
     relatedKeywords: ['Quantum Computing Horizons', 'Ambient Spatial Interfaces'],
   },
+  'ai-trends': {
+    mainKeyword: 'Five-Year Technology Forecast',
+    relatedKeywords: ['Quantum Computing Horizons', 'Ambient Spatial Interfaces'],
+  },
+  'technology/ai-trends': {
+    mainKeyword: 'Five-Year Technology Forecast',
+    relatedKeywords: ['Quantum Computing Horizons', 'Ambient Spatial Interfaces'],
+  },
   '10-technology-trends-that-will-shape-the-next-five-years': {
     mainKeyword: 'Five-Year Technology Forecast',
     relatedKeywords: ['Quantum Computing Horizons', 'Ambient Spatial Interfaces'],

@@ -24,8 +24,45 @@ export const ARTICLES: Article[] = [
 ];
 
 // Helper functions for easy querying
-export const getArticleBySlug = (slug: string): Article | undefined => {
-  return ARTICLES.find((a) => a.slug === slug || a.id === slug);
+export const getArticleBySlug = (slugOrPath: string): Article | undefined => {
+  if (!slugOrPath) return undefined;
+  const clean = slugOrPath
+    .replace(/^#\/?/, '')
+    .replace(/^\/+/, '')
+    .replace(/^article\//, '')
+    .trim();
+
+  // 1. Direct match by slug or id
+  let found = ARTICLES.find((a) => a.slug === clean || a.id === clean);
+  if (found) return found;
+
+  // 2. Handle category/slug format e.g. "technology/ai-trends"
+  if (clean.includes('/')) {
+    const parts = clean.split('/');
+    const slugPart = parts[parts.length - 1];
+    const catPart = parts[0];
+    found = ARTICLES.find(
+      (a) =>
+        (a.slug === slugPart || a.id === slugPart) &&
+        (a.category === catPart || catPart === 'article' || catPart === 'category')
+    );
+    if (found) return found;
+  }
+
+  // 3. Handle backward compatible aliases
+  const legacyAliases: Record<string, string> = {
+    '10-technology-trends-that-will-shape-the-next-five-years': 'tech-1',
+    'technology/10-technology-trends-that-will-shape-the-next-five-years': 'tech-1',
+    'ai-trends': 'tech-1',
+    'technology/ai-trends': 'tech-1',
+  };
+
+  const matchedId = legacyAliases[clean] || legacyAliases[clean.split('/').pop() || ''];
+  if (matchedId) {
+    return ARTICLES.find((a) => a.id === matchedId);
+  }
+
+  return undefined;
 };
 
 export const getArticlesByCategory = (categoryId: string): Article[] => {

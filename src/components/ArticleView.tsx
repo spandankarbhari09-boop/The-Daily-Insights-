@@ -105,7 +105,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   }, [article.id]);
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    const articleUrl = `${window.location.origin}/${article.category}/${article.slug}`;
+    navigator.clipboard.writeText(articleUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -173,16 +174,19 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   };
 
   const handleShareTwitter = () => {
-    const text = encodeURIComponent(`${article.title} via The Daily Pulse`);
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+    const articleUrl = `${window.location.origin}/${article.category}/${article.slug}`;
+    const text = encodeURIComponent(`${article.title} via The Daily Insights`);
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(articleUrl)}`, '_blank');
   };
 
   const handleShareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+    const articleUrl = `${window.location.origin}/${article.category}/${article.slug}`;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`, '_blank');
   };
 
   const handleShareLinkedin = () => {
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+    const articleUrl = `${window.location.origin}/${article.category}/${article.slug}`;
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`, '_blank');
   };
 
   const handleAddComment = (e: React.FormEvent) => {
