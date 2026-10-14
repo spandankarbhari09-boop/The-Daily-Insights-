@@ -412,19 +412,31 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           {article.sections.map((section, idx) => (
             <section key={idx} className="space-y-4">
               {section.heading && (
-                <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-100 mt-8 mb-4">
+                <h2
+                  id={section.heading.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}
+                  className="font-editorial text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-100 mt-8 mb-4 scroll-mt-24"
+                >
                   {section.heading}
                 </h2>
               )}
 
-              {section.paragraphs.map((para, pIdx) => (
-                <p
-                  key={pIdx}
-                  className="text-stone-700 dark:text-stone-300 text-base sm:text-lg leading-[1.8] font-sans-clean"
-                >
-                  {renderParagraphWithLinks(para)}
-                </p>
-              ))}
+              {section.paragraphs.map((para, pIdx) => {
+                const isQuestionSection = Boolean(section.heading?.trim().endsWith('?'));
+                const isDirectAnswer = isQuestionSection && pIdx === 0;
+
+                return (
+                  <p
+                    key={pIdx}
+                    className={
+                      isDirectAnswer
+                        ? "text-stone-800 dark:text-stone-100 text-base sm:text-lg leading-relaxed font-sans-clean font-medium pl-4 border-l-2 border-amber-600/70 dark:border-amber-500/70 bg-amber-50/40 dark:bg-amber-950/20 py-2.5 px-3 rounded-r-md my-3"
+                        : "text-stone-700 dark:text-stone-300 text-base sm:text-lg leading-[1.8] font-sans-clean"
+                    }
+                  >
+                    {renderParagraphWithLinks(para)}
+                  </p>
+                );
+              })}
 
               {section.quote && (
                 <blockquote className="my-8 py-4 px-6 border-l-2 border-stone-400 dark:border-stone-600 bg-stone-100/50 dark:bg-stone-900/40 italic font-editorial text-xl sm:text-2xl text-stone-800 dark:text-stone-200 leading-snug">

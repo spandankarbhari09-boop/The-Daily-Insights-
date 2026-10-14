@@ -30,11 +30,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           <h1 className="font-editorial text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-stone-900 dark:text-stone-50 leading-[1.1] text-balance">
-            Stories That Keep You Curious
+            Digital Magazine Insights: Stories That Keep You Curious
           </h1>
 
           <p className="mt-4 text-base sm:text-lg text-stone-600 dark:text-stone-300 font-sans-clean leading-relaxed text-balance max-w-2xl">
-            Explore the latest ideas, trends, stories and insights across sports, technology, entertainment, travel, business, lifestyle and more.
+            Explore the latest culture &amp; tech insights, ideas, trends, and global editorial stories across sports, technology, entertainment, travel, business, lifestyle, and AI.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">

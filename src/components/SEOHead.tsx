@@ -96,6 +96,18 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
               name: rk,
             })),
           ],
+          ...(article.faq && article.faq.length > 0
+            ? {
+                mainEntity: article.faq.map((item) => ({
+                  '@type': 'Question',
+                  name: item.question,
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: item.answer,
+                  },
+                })),
+              }
+            : {}),
         }
       : {
           '@context': 'https://schema.org',
@@ -121,6 +133,32 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         };
 
     scriptTag.textContent = JSON.stringify(jsonLdData);
+
+    // 7. Dedicated FAQPage Schema for Answer Engine Optimization (AEO)
+    const faqScriptId = 'faq-structured-data-jsonld';
+    let faqScriptTag = document.getElementById(faqScriptId) as HTMLScriptElement | null;
+    if (article?.faq && article.faq.length > 0) {
+      if (!faqScriptTag) {
+        faqScriptTag = document.createElement('script');
+        faqScriptTag.id = faqScriptId;
+        faqScriptTag.type = 'application/ld+json';
+        document.head.appendChild(faqScriptTag);
+      }
+      faqScriptTag.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: article.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      });
+    } else if (faqScriptTag) {
+      faqScriptTag.remove();
+    }
   }, [title, description, keywords, canonicalPath, article]);
 
   return null;
