@@ -147,25 +147,11 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         parts.push(text.substring(lastIndex, matchIndex));
       }
 
-      // Determine strong URL target
-      let strongHref = target;
-      const cleanTarget = target.replace(/^#/, '').trim();
-      if (cleanTarget.startsWith('category:')) {
-        const catId = cleanTarget.replace('category:', '');
-        strongHref = `/category/${catId}`;
-      } else if (!target.startsWith('http') && !target.startsWith('#')) {
-        const targetArticle = getArticleBySlug(cleanTarget);
-        if (targetArticle) {
-          strongHref = `/${targetArticle.category}/${targetArticle.slug}`;
-        }
-      }
-
       parts.push(
         <a
           key={matchIndex}
-          href={strongHref}
+          href={target.startsWith('#') ? target : `#article/${target}`}
           onClick={(e) => {
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
             e.preventDefault();
             handleTargetNavigation(target);
           }}
@@ -249,30 +235,20 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
       <div className="border-b border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 py-3 sm:py-4">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a
-              href={`/category/${article.category}`}
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-                e.preventDefault();
-                onBackToCategory(article.category);
-              }}
+            <button
+              onClick={() => onBackToCategory(article.category)}
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-stone-600 dark:text-stone-300 hover:text-amber-800 dark:hover:text-amber-400 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to {article.categoryName}</span>
-            </a>
+            </button>
             <span aria-hidden="true" className="text-stone-300 dark:text-stone-700">·</span>
-            <a
-              href="/"
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-                e.preventDefault();
-                onBackToHome();
-              }}
+            <button
+              onClick={onBackToHome}
               className="text-xs sm:text-sm text-stone-500 hover:text-stone-900 dark:hover:text-stone-200 transition-colors"
             >
               Home
-            </a>
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
@@ -301,56 +277,14 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
       {/* Main Article Container */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        {/* Semantic Breadcrumbs with Strong URLs */}
-        <nav aria-label="Breadcrumb" className="mb-4">
-          <ol className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400">
-            <li>
-              <a
-                href="/"
-                onClick={(e) => {
-                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-                  e.preventDefault();
-                  onBackToHome();
-                }}
-                className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors"
-              >
-                Home
-              </a>
-            </li>
-            <li aria-hidden="true" className="text-stone-300 dark:text-stone-700">/</li>
-            <li>
-              <a
-                href={`/category/${article.category}`}
-                onClick={(e) => {
-                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-                  e.preventDefault();
-                  onBackToCategory(article.category);
-                }}
-                className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors uppercase tracking-wider font-semibold"
-              >
-                {article.categoryName}
-              </a>
-            </li>
-            <li aria-hidden="true" className="text-stone-300 dark:text-stone-700">/</li>
-            <li aria-current="page" className="text-stone-700 dark:text-stone-300 font-medium truncate max-w-[200px] sm:max-w-xs">
-              {article.title}
-            </li>
-          </ol>
-        </nav>
-
         {/* Category & Date Metadata */}
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-3">
-          <a
-            href={`/category/${article.category}`}
-            onClick={(e) => {
-              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-              e.preventDefault();
-              onBackToCategory(article.category);
-            }}
-            className="hover:underline font-bold"
+          <button
+            onClick={() => onBackToCategory(article.category)}
+            className="hover:underline"
           >
             {article.categoryName}
-          </a>
+          </button>
           <span aria-hidden="true">·</span>
           <span>Editorial Essay</span>
           <span aria-hidden="true">·</span>
@@ -804,17 +738,12 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   More from {article.categoryName}
                 </h2>
               </div>
-              <a
-                href={`/category/${article.category}`}
-                onClick={(e) => {
-                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-                  e.preventDefault();
-                  onBackToCategory(article.category);
-                }}
+              <button
+                onClick={() => onBackToCategory(article.category)}
                 className="text-xs sm:text-sm font-semibold text-amber-800 dark:text-amber-400 hover:underline"
               >
                 See all {article.categoryName} stories →
-              </a>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

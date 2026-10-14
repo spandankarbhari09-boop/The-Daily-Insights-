@@ -23,14 +23,6 @@ export const ARTICLES: Article[] = [
   ...AI_ARTICLES,
 ];
 
-export const getArticleUrl = (article: { category: string; slug: string }): string => {
-  return `/${article.category}/${article.slug}`;
-};
-
-export const getCategoryUrl = (categoryId: string): string => {
-  return `/category/${categoryId}`;
-};
-
 // Helper functions for easy querying
 export const getArticleBySlug = (slugOrPath: string): Article | undefined => {
   if (!slugOrPath) return undefined;
