@@ -41,22 +41,37 @@ export const CategoryFeed: React.FC<CategoryFeedProps> = ({
                     <span aria-hidden="true">·</span>
                     <span>{cat.tagline}</span>
                   </div>
-                  <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
-                    {cat.name}
-                  </h2>
+                  <a
+                    href={`/category/${cat.id}`}
+                    onClick={(e) => {
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+                      e.preventDefault();
+                      onViewCategory(cat.id);
+                    }}
+                    className="block group"
+                  >
+                    <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors">
+                      {cat.name}
+                    </h2>
+                  </a>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <p className="hidden md:inline text-xs text-stone-500 dark:text-stone-400 max-w-sm line-clamp-1">
                     {cat.description}
                   </p>
-                  <button
-                    onClick={() => onViewCategory(cat.id)}
+                  <a
+                    href={`/category/${cat.id}`}
+                    onClick={(e) => {
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+                      e.preventDefault();
+                      onViewCategory(cat.id);
+                    }}
                     className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-amber-800 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-300 transition-colors whitespace-nowrap group"
                   >
                     <span>View All {cat.name}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </a>
                 </div>
               </div>
 

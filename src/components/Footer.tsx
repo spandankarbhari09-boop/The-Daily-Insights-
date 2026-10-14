@@ -31,6 +31,42 @@ export const Footer: React.FC<FooterProps> = ({
     setTimeout(() => setSubscribed(false), 5000);
   };
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onNavigateHome();
+  };
+
+  const handleAboutClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onNavigateAbout();
+  };
+
+  const handleCategoryClick = (e: React.MouseEvent, catId: CategoryId) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onSelectCategory(catId);
+  };
+
+  const handleContactClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onOpenContact();
+  };
+
+  const handlePrivacyClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onOpenPrivacy();
+  };
+
+  const handleTermsClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onOpenTerms();
+  };
+
   return (
     <footer className="border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors">
       {/* Newsletter Strip */}
@@ -42,7 +78,7 @@ export const Footer: React.FC<FooterProps> = ({
           <h3 className="font-editorial text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-50">
             Subscribe to The Daily Pulse
           </h3>
-          <p className="mt-3 text-stone-600 dark:text-stone-300 text-sm sm:text-base max-w-xl mx-auto font-sans-clean leading-relaxed">
+          <p className="mt-3 text-stone-600 dark:text-stone-300 text-sm sm:base max-w-xl mx-auto font-sans-clean leading-relaxed">
             Get our latest stories and trending topics delivered to your inbox.
           </p>
 
@@ -81,12 +117,13 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
           {/* Brand Column (4 cols) */}
           <div className="md:col-span-4 space-y-4">
-            <button
-              onClick={onNavigateHome}
-              className="text-left font-editorial text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50 hover:text-amber-800 transition-colors"
+            <a
+              href="/"
+              onClick={handleHomeClick}
+              className="inline-block text-left font-editorial text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50 hover:text-amber-800 transition-colors"
             >
               THE DAILY PULSE
-            </button>
+            </a>
 
             <p className="text-sm font-editorial italic text-stone-600 dark:text-stone-400">
               Stories, Ideas &amp; Insights for Every Interest.
@@ -144,29 +181,29 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-stone-600 dark:text-stone-400">
               <li>
-                <button onClick={onNavigateHome} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
+                <a href="/" onClick={handleHomeClick} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
                   Home
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={onNavigateAbout} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
+                <a href="/about" onClick={handleAboutClick} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
                   About The Daily Pulse
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={onOpenContact} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
+                <a href="/contact" onClick={handleContactClick} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
                   Contact Newsroom
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={onOpenPrivacy} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
+                <a href="/privacy" onClick={handlePrivacyClick} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
                   Privacy Policy
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={onOpenTerms} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
+                <a href="/terms" onClick={handleTermsClick} className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors">
                   Terms &amp; Conditions
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -178,13 +215,14 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-stone-600 dark:text-stone-400">
               {CATEGORIES.map((cat) => (
-                <button
+                <a
                   key={cat.id}
-                  onClick={() => onSelectCategory(cat.id)}
+                  href={`/category/${cat.id}`}
+                  onClick={(e) => handleCategoryClick(e, cat.id)}
                   className="text-left hover:text-amber-800 dark:hover:text-amber-400 transition-colors truncate"
                 >
                   {cat.name}
-                </button>
+                </a>
               ))}
             </div>
           </div>
@@ -196,11 +234,11 @@ export const Footer: React.FC<FooterProps> = ({
             &copy; {new Date().getFullYear()} The Daily Pulse. All rights reserved. Published for curious minds worldwide.
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={onOpenPrivacy} className="hover:underline">Privacy</button>
+            <a href="/privacy" onClick={handlePrivacyClick} className="hover:underline">Privacy</a>
             <span aria-hidden="true">·</span>
-            <button onClick={onOpenTerms} className="hover:underline">Terms</button>
+            <a href="/terms" onClick={handleTermsClick} className="hover:underline">Terms</a>
             <span aria-hidden="true">·</span>
-            <button onClick={onOpenContact} className="hover:underline">Corrections</button>
+            <a href="/contact" onClick={handleContactClick} className="hover:underline">Corrections</a>
             <span aria-hidden="true">·</span>
             <span>ISSN 2984-1029</span>
           </div>

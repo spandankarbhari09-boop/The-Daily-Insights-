@@ -64,6 +64,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     );
   };
 
+  const articleUrl = `/${article.category}/${article.slug}`;
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) {
+      return;
+    }
+    e.preventDefault();
+    onSelect(article);
+  };
+
   if (layout === 'horizontal') {
     return (
       <article
@@ -71,9 +81,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         className="group relative bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg overflow-hidden flex flex-col md:flex-row hover:border-stone-300 dark:hover:border-stone-700 hover:shadow-md transition-all duration-200 cursor-pointer"
       >
         <div className="md:w-5/12 relative aspect-[16/10] md:aspect-auto overflow-hidden bg-stone-100 dark:bg-stone-800">
-          {renderThumbnail()}
+          <a
+            href={articleUrl}
+            onClick={handleLinkClick}
+            aria-label={article.title}
+            className="block w-full h-full"
+          >
+            {renderThumbnail()}
+          </a>
           {badgeRank !== undefined && (
-            <div className="absolute top-3 left-3 w-7 h-7 bg-stone-900/90 text-white text-xs font-bold rounded flex items-center justify-center font-mono">
+            <div className="absolute top-3 left-3 w-7 h-7 bg-stone-900/90 text-white text-xs font-bold rounded flex items-center justify-center font-mono pointer-events-none">
               0{badgeRank}
             </div>
           )}
@@ -86,8 +103,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                 {article.categoryName}
               </span>
               <button
+                type="button"
                 onClick={handleBookmarkClick}
-                className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition-colors p-1"
+                className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition-colors p-1 z-10"
                 title={bookmarked ? 'Remove bookmark' : 'Save article'}
                 aria-label="Bookmark article"
               >
@@ -95,9 +113,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               </button>
             </div>
 
-            <h3 className="font-editorial text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors line-clamp-2 leading-snug">
-              {article.title}
-            </h3>
+            <a
+              href={articleUrl}
+              onClick={handleLinkClick}
+              className="block group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors"
+            >
+              <h3 className="font-editorial text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100 leading-snug line-clamp-2">
+                {article.title}
+              </h3>
+            </a>
 
             <p className="mt-2 text-stone-600 dark:text-stone-300 text-xs sm:text-sm line-clamp-2 leading-relaxed">
               {article.excerpt}
@@ -116,14 +140,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               </span>
             </div>
 
-            <span 
+            <a
+              href={articleUrl}
+              onClick={handleLinkClick}
               className="text-amber-800 dark:text-amber-400 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1"
               title={`Read story: ${article.title}`}
               aria-label={`Read story: ${article.title}`}
             >
               <span>Read in-depth article</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </span>
+            </a>
           </div>
         </div>
       </article>
@@ -141,9 +167,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           <span aria-hidden="true">·</span>
           <span>{article.readTime}</span>
         </div>
-        <h4 className="font-editorial text-base font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors line-clamp-2 leading-snug">
-          {article.title}
-        </h4>
+        <a
+          href={articleUrl}
+          onClick={handleLinkClick}
+          className="block group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors"
+        >
+          <h4 className="font-editorial text-base font-semibold text-stone-900 dark:text-stone-100 leading-snug line-clamp-2">
+            {article.title}
+          </h4>
+        </a>
         <div className="mt-1.5 text-xs text-stone-500 dark:text-stone-400 flex items-center justify-between">
           <span>{article.author.name}</span>
           <span>{article.publishedAt}</span>
@@ -159,15 +191,23 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg overflow-hidden flex flex-col hover:border-stone-300 dark:hover:border-stone-700 hover:shadow-md transition-all duration-200 cursor-pointer"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-stone-100 dark:bg-stone-800">
-        {renderThumbnail()}
+        <a
+          href={articleUrl}
+          onClick={handleLinkClick}
+          aria-label={article.title}
+          className="block w-full h-full"
+        >
+          {renderThumbnail()}
+        </a>
         {badgeRank !== undefined && (
-          <div className="absolute top-3 left-3 w-7 h-7 bg-stone-900/90 text-white text-xs font-bold rounded flex items-center justify-center font-mono">
+          <div className="absolute top-3 left-3 w-7 h-7 bg-stone-900/90 text-white text-xs font-bold rounded flex items-center justify-center font-mono pointer-events-none">
             0{badgeRank}
           </div>
         )}
         <button
+          type="button"
           onClick={handleBookmarkClick}
-          className="absolute top-3 right-3 p-1.5 bg-white/90 dark:bg-stone-900/90 text-stone-700 dark:text-stone-200 rounded-md hover:text-amber-700 dark:hover:text-amber-400 transition-colors shadow-sm"
+          className="absolute top-3 right-3 p-1.5 bg-white/90 dark:bg-stone-900/90 text-stone-700 dark:text-stone-200 rounded-md hover:text-amber-700 dark:hover:text-amber-400 transition-colors shadow-sm z-10"
           title={bookmarked ? 'Remove bookmark' : 'Save article'}
           aria-label="Bookmark article"
         >
@@ -181,9 +221,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             {article.categoryName}
           </div>
 
-          <h3 className="font-editorial text-lg font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors line-clamp-2 leading-snug">
-            {article.title}
-          </h3>
+          <a
+            href={articleUrl}
+            onClick={handleLinkClick}
+            className="block group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors"
+          >
+            <h3 className="font-editorial text-lg font-bold text-stone-900 dark:text-stone-100 leading-snug line-clamp-2">
+              {article.title}
+            </h3>
+          </a>
 
           <p className="mt-2 text-stone-600 dark:text-stone-300 text-xs sm:text-sm line-clamp-3 leading-relaxed">
             {article.excerpt}
@@ -200,15 +246,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => onSelect(article)}
+          <a
+            href={articleUrl}
+            onClick={handleLinkClick}
             title={`Read complete story: ${article.title}`}
             aria-label={`Read complete story: ${article.title}`}
             className="px-3 py-1 text-xs font-semibold text-stone-800 dark:text-stone-200 hover:text-amber-800 dark:hover:text-amber-400 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded transition-colors flex items-center gap-1"
           >
             <span>Read full story</span>
             <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+          </a>
         </div>
       </div>
     </article>

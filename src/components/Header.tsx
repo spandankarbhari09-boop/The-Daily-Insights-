@@ -28,22 +28,38 @@ export const Header: React.FC<HeaderProps> = ({
   const { bookmarks } = useBookmarks();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleCategoryClick = (catId: CategoryId) => {
+  const handleCategoryClick = (e: React.MouseEvent, catId: CategoryId) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) {
+      return;
+    }
+    e.preventDefault();
     onSelectCategory(catId);
     setMobileMenuOpen(false);
   };
 
-  const handleHomeClick = () => {
+  const handleHomeClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) {
+      return;
+    }
+    e.preventDefault();
     onNavigateHome();
     setMobileMenuOpen(false);
   };
 
-  const handleAboutClick = () => {
+  const handleAboutClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) {
+      return;
+    }
+    e.preventDefault();
     onNavigateAbout();
     setMobileMenuOpen(false);
   };
 
-  const handleBookmarksClick = () => {
+  const handleBookmarksClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) {
+      return;
+    }
+    e.preventDefault();
     onNavigateBookmarks();
     setMobileMenuOpen(false);
   };
@@ -61,14 +77,15 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="hidden md:inline">The Global Edition</span>
           </div>
           <div className="flex items-center gap-4 text-xs">
-            <button
+            <a
+              href="/about"
               onClick={handleAboutClick}
               className={`hover:text-stone-900 dark:hover:text-stone-100 transition-colors ${
                 currentView === 'about' ? 'text-amber-800 dark:text-amber-400 font-semibold' : ''
               }`}
             >
               About The Magazine
-            </button>
+            </a>
             <span aria-hidden="true" className="text-stone-300 dark:text-stone-700">·</span>
             <span className="hidden sm:inline text-amber-700 dark:text-amber-500 font-medium">
               10 Desks · 50+ In-Depth Stories
@@ -81,7 +98,8 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
         {/* Zone 1: Wordmark */}
         <div className="flex items-center gap-3">
-          <button
+          <a
+            href="/"
             onClick={handleHomeClick}
             className="text-left group flex flex-col focus:outline-none"
             aria-label="The Daily Pulse Home"
@@ -89,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="font-editorial text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-stone-50 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors whitespace-nowrap">
               THE DAILY PULSE
             </span>
-          </button>
+          </a>
         </div>
 
         {/* Zone 2: Navigation Links (Desktop) */}
@@ -97,7 +115,8 @@ export const Header: React.FC<HeaderProps> = ({
           className="hidden xl:flex items-center gap-5 text-[13px] font-medium text-stone-600 dark:text-stone-300 whitespace-nowrap"
           aria-label="Main Navigation"
         >
-          <button
+          <a
+            href="/"
             onClick={handleHomeClick}
             className={`transition-colors py-1 ${
               currentView === 'home' && currentCategory === 'all'
@@ -106,13 +125,14 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             Home
-          </button>
+          </a>
           {CATEGORIES.map((cat) => {
             const isActive = currentCategory === cat.id && currentView === 'category';
             return (
-              <button
+              <a
                 key={cat.id}
-                onClick={() => handleCategoryClick(cat.id)}
+                href={`/category/${cat.id}`}
+                onClick={(e) => handleCategoryClick(e, cat.id)}
                 className={`transition-colors py-1 ${
                   isActive
                     ? 'text-amber-800 dark:text-amber-400 font-bold border-b-2 border-amber-800 dark:border-amber-400'
@@ -120,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }`}
               >
                 {cat.name}
-              </button>
+              </a>
             );
           })}
         </nav>
@@ -140,7 +160,8 @@ export const Header: React.FC<HeaderProps> = ({
             </kbd>
           </button>
 
-          <button
+          <a
+            href="/bookmarks"
             onClick={handleBookmarksClick}
             className={`relative p-2 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white rounded-md hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors ${
               currentView === 'bookmarks' ? 'text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40' : ''
@@ -154,7 +175,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {bookmarks.length}
               </span>
             )}
-          </button>
+          </a>
 
           <button
             onClick={toggleTheme}
@@ -178,16 +199,18 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Secondary Category Subnav Bar for Desktop (Compact Horizontal Scroll if needed) */}
       <div className="hidden lg:flex xl:hidden border-t border-stone-200/70 dark:border-stone-800/70 overflow-x-auto py-2 px-6 gap-6 text-xs text-stone-600 dark:text-stone-300 no-scrollbar">
-        <button
+        <a
+          href="/"
           onClick={handleHomeClick}
           className={`shrink-0 ${currentView === 'home' ? 'text-amber-800 dark:text-amber-400 font-semibold' : ''}`}
         >
           Home
-        </button>
+        </a>
         {CATEGORIES.map((cat) => (
-          <button
+          <a
             key={cat.id}
-            onClick={() => handleCategoryClick(cat.id)}
+            href={`/category/${cat.id}`}
+            onClick={(e) => handleCategoryClick(e, cat.id)}
             className={`shrink-0 hover:text-stone-900 dark:hover:text-white ${
               currentCategory === cat.id && currentView === 'category'
                 ? 'text-amber-800 dark:text-amber-400 font-semibold'
@@ -195,7 +218,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             {cat.name}
-          </button>
+          </a>
         ))}
       </div>
 
@@ -216,7 +239,8 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
 
-            <button
+            <a
+              href="/"
               onClick={handleHomeClick}
               className={`w-full text-left py-2 px-3 rounded-md text-sm font-medium flex items-center justify-between ${
                 currentView === 'home' && currentCategory === 'all'
@@ -226,7 +250,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span>Front Page (Home)</span>
               <ChevronRight className="w-4 h-4 text-stone-400" />
-            </button>
+            </a>
 
             <div className="pt-2">
               <div className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-2 px-3">
@@ -234,9 +258,10 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
                 {CATEGORIES.map((cat) => (
-                  <button
+                  <a
                     key={cat.id}
-                    onClick={() => handleCategoryClick(cat.id)}
+                    href={`/category/${cat.id}`}
+                    onClick={(e) => handleCategoryClick(e, cat.id)}
                     className={`text-left py-2 px-3 rounded-md text-sm flex items-center justify-between transition-colors ${
                       currentCategory === cat.id && currentView === 'category'
                         ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 font-semibold'
@@ -245,13 +270,14 @@ export const Header: React.FC<HeaderProps> = ({
                   >
                     <span>{cat.name}</span>
                     <span className="text-xs text-stone-400">5 stories</span>
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
 
             <div className="pt-4 border-t border-stone-200 dark:border-stone-800 space-y-2">
-              <button
+              <a
+                href="/bookmarks"
                 onClick={handleBookmarksClick}
                 className="w-full text-left py-2 px-3 rounded-md text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-900 flex items-center justify-between"
               >
@@ -259,14 +285,15 @@ export const Header: React.FC<HeaderProps> = ({
                   <Bookmark className="w-4 h-4 text-stone-400" /> Saved Articles
                 </span>
                 <span className="text-xs text-stone-400">{bookmarks.length} saved</span>
-              </button>
+              </a>
 
-              <button
+              <a
+                href="/about"
                 onClick={handleAboutClick}
-                className="w-full text-left py-2 px-3 rounded-md text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-900"
+                className="w-full block text-left py-2 px-3 rounded-md text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-900"
               >
                 About The Daily Pulse
-              </button>
+              </a>
             </div>
           </div>
         </div>

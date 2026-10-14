@@ -173,6 +173,73 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     } else if (faqScriptTag) {
       faqScriptTag.remove();
     }
+
+    // 8. BreadcrumbList Schema for Strong Hierarchical URLs
+    const breadcrumbScriptId = 'breadcrumb-structured-data-jsonld';
+    let breadcrumbScriptTag = document.getElementById(breadcrumbScriptId) as HTMLScriptElement | null;
+    const origin = window.location.origin;
+
+    if (article) {
+      if (!breadcrumbScriptTag) {
+        breadcrumbScriptTag = document.createElement('script');
+        breadcrumbScriptTag.id = breadcrumbScriptId;
+        breadcrumbScriptTag.type = 'application/ld+json';
+        document.head.appendChild(breadcrumbScriptTag);
+      }
+      breadcrumbScriptTag.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: `${origin}/`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: article.categoryName,
+            item: `${origin}/category/${article.category}`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: article.title,
+            item: resolvedUrl,
+          },
+        ],
+      });
+    } else if (canonicalPath && canonicalPath.startsWith('/category/')) {
+      const catId = canonicalPath.replace('/category/', '');
+      const catName = catId.charAt(0).toUpperCase() + catId.slice(1);
+      if (!breadcrumbScriptTag) {
+        breadcrumbScriptTag = document.createElement('script');
+        breadcrumbScriptTag.id = breadcrumbScriptId;
+        breadcrumbScriptTag.type = 'application/ld+json';
+        document.head.appendChild(breadcrumbScriptTag);
+      }
+      breadcrumbScriptTag.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: `${origin}/`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: catName,
+            item: resolvedUrl,
+          },
+        ],
+      });
+    } else if (breadcrumbScriptTag) {
+      breadcrumbScriptTag.remove();
+    }
   }, [title, description, keywords, canonicalPath, article]);
 
   return null;
